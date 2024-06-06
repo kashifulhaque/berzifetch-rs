@@ -1,5 +1,6 @@
-use std::{ fs, os::unix::ffi::OsStringExt };
+use colored::*;
 use regex::Regex;
+use std::{ fs, os::unix::ffi::OsStringExt };
 use users::{ get_user_by_uid, get_current_uid };
 
 fn main() {
@@ -24,11 +25,11 @@ fn main() {
     }
   }
 
-  println!("  OS Name:\t{}", os_name);
+  println!("{}\n  {}", " OS Name".yellow().bold(), os_name.italic());
 
   // Get the current username
   let user = get_user_by_uid(get_current_uid()).unwrap();
-  println!("  Username:\t{}", user.name().to_str().unwrap());
+  println!("{}\n  {}", " Username".yellow().bold(), user.name().to_str().unwrap().italic());
 
   // Get the current hostname
   use libc::{ c_char, sysconf, _SC_HOST_NAME_MAX };
@@ -44,20 +45,20 @@ fn main() {
 
   let end = buffer.iter().position(|&b| b == 0).unwrap_or(buffer.len());
   buffer.truncate(end);
-  println!("  Hostname:\t{}", OsString::from_vec(buffer).to_str().unwrap());
+  println!("{}\n  {}", " Hostname".yellow().bold(), OsString::from_vec(buffer).to_str().unwrap().italic());
 
   // Get the linux kernel version
   let kernel_version_file = fs::read_to_string("/proc/version").expect("not linux");
 
   if let Some(version) = extract_kernel_version(&kernel_version_file) {
-    println!("  Kernel:\t{}", version);
+    println!("{}\n  {}", " Kernel".yellow().bold(), version.italic());
   } else {
     println!("Failed to fetch Linux kernel version");
   }
 
   // Get CPU architecture
   let arch = std::env::consts::ARCH;
-  println!("Architecture:\t{}", arch);
+  println!("{}\n  {}", "󰻠 Architecture".yellow().bold(), arch.italic());
 
   // Get CPU name
   if let Ok(cpu_info) = fs::read_to_string("/proc/cpuinfo") {
@@ -67,7 +68,7 @@ fn main() {
 
         if parts.len() > 1 {
           let cpu_name = parts[1].trim();
-          println!("CPU Name:\t{}", cpu_name);
+          println!("{}\n  {}", " CPU Name".yellow().bold(), cpu_name.italic());
         }
 
         break;
@@ -83,7 +84,8 @@ fn main() {
       let parts: Vec<&str> = line.split_whitespace().collect();
       if let Ok(mem_total) = parts[1].parse::<u64>() {
         let mem_gb = mem_total as f64 / 1024.0 / 1024.0;
-        println!("Total Memory:\t{:.2} GB", mem_gb);
+        let mem_gb = (mem_gb * 100.0).round() / 100.0;
+        println!("{}\n  {}", "󰍛 Total Memory (GB)".yellow().bold(), mem_gb.to_string().italic());
       }
       break;
     }
