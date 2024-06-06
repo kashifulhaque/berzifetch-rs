@@ -1,4 +1,4 @@
-use std::{fs, os::unix::ffi::OsStringExt};
+use std::{ fs, os::unix::ffi::OsStringExt };
 use regex::Regex;
 use users::{ get_user_by_uid, get_current_uid };
 
@@ -24,11 +24,11 @@ fn main() {
     }
   }
 
-  println!("{}", os_name);
+  println!("  OS Name:\t{}", os_name);
 
   // Get the current username
   let user = get_user_by_uid(get_current_uid()).unwrap();
-  println!("Hello, {}", user.name().to_str().unwrap());
+  println!("  Username:\t{}", user.name().to_str().unwrap());
 
   // Get the current hostname
   use libc::{ c_char, sysconf, _SC_HOST_NAME_MAX };
@@ -44,5 +44,22 @@ fn main() {
 
   let end = buffer.iter().position(|&b| b == 0).unwrap_or(buffer.len());
   buffer.truncate(end);
-  println!("{}", OsString::from_vec(buffer).to_str().unwrap());
+  println!("  Hostname:\t{}", OsString::from_vec(buffer).to_str().unwrap());
+
+  // Get the linux kernel version
+  let kernel_version_file = fs::read_to_string("/proc/version").expect("not linux");
+
+  if let Some(version) = extract_kernel_version(&kernel_version_file) {
+    println!("  Kernel:\t{}", version);
+  } else {
+    println!("Failed to fetch Linux kernel version");
+  }
+}
+
+fn extract_kernel_version(version_info: &str) -> Option<&str> {
+  if let Some(end_index) = version_info.find(" (") {
+    return Some(&version_info[..end_index]);
+  }
+
+  None
 }
