@@ -1,3 +1,6 @@
+use users::{ get_user_by_uid, get_current_uid };
+
 fn main() {
-    println!("Hello, world!");
+  let user = get_user_by_uid(get_current_uid()).unwrap();
+  println!("Hello, {}", user.name().to_str().unwrap());
 }
