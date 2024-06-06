@@ -55,10 +55,11 @@ fn main() {
     println!("Failed to fetch Linux kernel version");
   }
 
+  // Get CPU architecture
   let arch = std::env::consts::ARCH;
-
   println!("Architecture:\t{}", arch);
 
+  // Get CPU name
   if let Ok(cpu_info) = fs::read_to_string("/proc/cpuinfo") {
     for line in cpu_info.lines() {
       if line.starts_with("model name") {
@@ -74,6 +75,18 @@ fn main() {
     }
   } else {
     println!("Failed to read /proc/cpuinfo");
+  }
+
+  // Get total memory
+  if let Ok(memory_info) = fs::read_to_string("/proc/meminfo") {
+    for line in memory_info.lines() {
+      let parts: Vec<&str> = line.split_whitespace().collect();
+      if let Ok(mem_total) = parts[1].parse::<u64>() {
+        let mem_gb = mem_total as f64 / 1024.0 / 1024.0;
+        println!("Total Memory:\t{:.2} GB", mem_gb);
+      }
+      break;
+    }
   }
 }
 
