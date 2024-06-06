@@ -17,6 +17,11 @@ if ! command_exists cargo; then
   exit 1
 fi
 
+if ! command_exists cc; then
+  echo "Error: cc (C/C++ compiler) is not installed"
+  exit 1
+fi
+
 echo "Building the release executable..."
 cargo build --release
 
