@@ -10,3 +10,6 @@ git clone https://github.com/kashifulhaque/berzifetch-rs.git
 cd berzifetch-rs
 cargo run
 ```
+
+### **Screenshot**
+![](./assets/berzifetch.png)
