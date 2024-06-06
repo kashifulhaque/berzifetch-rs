@@ -1,0 +1,9 @@
+[package]
+name = "berzifetch-rs"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+libc = "0.2.155"
+regex = "1.10.4"
+users = "0.11"
