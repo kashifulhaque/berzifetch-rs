@@ -54,6 +54,27 @@ fn main() {
   } else {
     println!("Failed to fetch Linux kernel version");
   }
+
+  let arch = std::env::consts::ARCH;
+
+  println!("Architecture:\t{}", arch);
+
+  if let Ok(cpu_info) = fs::read_to_string("/proc/cpuinfo") {
+    for line in cpu_info.lines() {
+      if line.starts_with("model name") {
+        let parts: Vec<&str> = line.split(":").collect();
+
+        if parts.len() > 1 {
+          let cpu_name = parts[1].trim();
+          println!("CPU Name:\t{}", cpu_name);
+        }
+
+        break;
+      }
+    }
+  } else {
+    println!("Failed to read /proc/cpuinfo");
+  }
 }
 
 fn extract_kernel_version(version_info: &str) -> Option<&str> {
