@@ -16,6 +16,7 @@ name = "berzifetch-rs"
 version = "0.1.0"
 dependencies = [
  "colored",
+ "figlet-rs",
  "libc",
  "regex",
  "users",
@@ -30,6 +31,12 @@ dependencies = [
  "lazy_static",
  "windows-sys",
 ]
+
+[[package]]
+name = "figlet-rs"
+version = "0.1.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4742a071cd9694fc86f9fa1a08fa3e53d40cc899d7ee532295da2d085639fbc5"
 
 [[package]]
 name = "lazy_static"

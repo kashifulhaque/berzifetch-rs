@@ -1,6 +1,7 @@
 use colored::*;
 use regex::Regex;
-use std::{ fs, os::unix::ffi::OsStringExt };
+use figlet_rs::FIGfont;
+use std::{ env, fs, os::unix::ffi::OsStringExt };
 use users::{ get_user_by_uid, get_current_uid };
 
 fn main() {
@@ -22,6 +23,12 @@ fn main() {
       }
 
       os_name.push_str(&cap[1]);
+
+      if idx == 1 {
+        let std_font = FIGfont::standard().unwrap();
+        let figure = std_font.convert(&cap[1]);
+        println!("{}", figure.unwrap());
+      }
     }
   }
 
@@ -85,10 +92,25 @@ fn main() {
       if let Ok(mem_total) = parts[1].parse::<u64>() {
         let mem_gb = mem_total as f64 / 1024.0 / 1024.0;
         let mem_gb = (mem_gb * 100.0).round() / 100.0;
-        println!("{}\n  {}", "󰍛 Total Memory (GB)".yellow().bold(), mem_gb.to_string().italic());
+        println!("{}\n  {} {}", "󰍛 Total Memory".yellow().bold(), mem_gb.to_string().italic(), "GB".italic());
       }
       break;
     }
+  }
+
+  // Get current shell
+  match env::var("SHELL") {
+    Ok(shell) => {
+      let (_, shell_name) = shell.rsplit_once('/').unwrap();
+      println!("{}\n  {}", " Shell:".yellow().bold(), shell_name.italic())
+    },
+    Err(_err) => (),
+  }
+
+  // Get Desktop Environment
+  match env::var("XDG_CURRENT_DESKTOP") {
+    Ok(de) => println!("{}\n  {}", "󰪫 DE:".yellow().bold(), de.italic()),
+    Err(_err) => (),
   }
 }
 

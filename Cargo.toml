@@ -9,6 +9,7 @@ path = "src/main.rs"
 
 [dependencies]
 colored = "2.1.0"
+figlet-rs = "0.1.5"
 libc = "0.2.155"
 regex = "1.10.4"
 users = "0.11"
